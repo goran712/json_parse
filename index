@@ -1,1 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            font-family: Lato;
+        }
+    </style>
+</head>
+<body>
 
+<h1>AJAX</h1>
+<br>
+<div>Score: <span id="score"></span></div>
+<br>
+<div id="output"></div><!--Ovde se pojavljuje http request result odnosno u ovom slucaju -->
+<br>
+<button id="button" type="button">Click Me</button>
+
+<script>
+ var btn = document.getElementById('button');
+
+    btn.addEventListener('click', nextitem);
+
+
+    // varijabla za html sadrzaj div-a sa klasom "output"
+    var output = document.getElementById('output');
+
+    function nextitem() {
+
+      // URL tvog JSON fajla
+      var url = 'https://hub.docker.com/v2/repositories/mainflux/mqtt/';
+
+      // Deklarisana varijabla koja ce kasnije sadrzati tekst koji zelis
+      var html;
+
+      // pozivanje funkcije sa argumentima
+      requestAJAX(url, function (data) {
+
+        // ceo JSON objekt smesten u varijablu obj
+        var obj = data;
+
+        // obj.pull_count je value od "pull_count" iz JSON objekta
+        html = obj.pull_count;
+
+        // broj koji si trazio sada je sadrzaj div-a sa klasom "output"
+        output.innerHTML = html;
+
+      });
+
+    }
+
+    // Funkcija koja pravi http request
+    function requestAJAX(url, callback) {
+
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function () {
+
+        if (xhr.readyState == 4 && xhr.status == 200) {
+
+          callback(JSON.parse(xhr.responseText));
+        }
+
+      };
+      xhr.open('GET',url,true);
+      xhr.send();
+    }
+
+/*
+
+    Ceo JSON objekt
+    ---------------
+
+     {
+      "user": "mainflux",
+      "name": "mqtt",
+      "namespace": "mainflux",
+      "repository_type": "image",
+      "status": 1,
+      "description": "MQTT adapter service for Mainflux IoT platform.",
+      "is_private": false,
+      "is_automated": false,
+      "can_edit": false,
+      "star_count": 2,
+      "pull_count": 210654,
+      "last_updated": "2019-04-04T10:20:53.520608Z",
+      "is_migrated": false,
+      "has_starred": false,
+      "full_description": "",
+      "affiliation": null,
+      "permissions": {
+        "read": true,
+        "write": false,
+        "admin": false
+      }
+    }
+*/
+
+
+</script>
+
+</body>
+</html>
